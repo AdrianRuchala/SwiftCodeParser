@@ -11,8 +11,48 @@ import org.springframework.web.bind.annotation.RestController
 class SwiftCodeParserController(val repository: SwiftCodeParserRepository) {
 
     @GetMapping("/{swiftCode}")
-    fun getSwiftCode(@PathVariable swiftCode: String) =
-        repository.findBySwiftCode(swiftCode)
+    fun getSwiftCode(@PathVariable swiftCode: String): Map<String, Any>? {
+        val swiftCodes = repository.findBySwiftCode(swiftCode)
+
+        if (swiftCodes.isEmpty()) {
+            return null
+        } else {
+
+            val foundedSwiftCode = swiftCodes.first()
+
+            return if (foundedSwiftCode.isHeadquarter) {
+                val branches = repository.findByCountryISO2(foundedSwiftCode.countryISO2)
+                    .filter { it.bankName == foundedSwiftCode.bankName && !it.isHeadquarter }
+
+                mapOf(
+                    "address" to foundedSwiftCode.address,
+                    "bankName" to foundedSwiftCode.bankName,
+                    "countryISO2" to foundedSwiftCode.countryISO2,
+                    "countryName" to foundedSwiftCode.countryName,
+                    "isHeadquarter" to foundedSwiftCode.isHeadquarter,
+                    "swiftCode" to foundedSwiftCode.swiftCode,
+                    "branches" to branches.map { branch ->
+                        mapOf(
+                            "address" to branch.address,
+                            "bankName" to branch.bankName,
+                            "countryISO2" to branch.countryISO2,
+                            "isHeadQuarter" to branch.isHeadquarter,
+                            "swiftCode" to branch.swiftCode
+                        )
+                    }
+                )
+            } else {
+                mapOf(
+                    "address" to foundedSwiftCode.address,
+                    "bankName" to foundedSwiftCode.bankName,
+                    "countryISO2" to foundedSwiftCode.countryISO2,
+                    "countryName" to foundedSwiftCode.countryName,
+                    "isHeadquarter" to foundedSwiftCode.isHeadquarter,
+                    "swiftCode" to foundedSwiftCode.swiftCode
+                )
+            }
+        }
+    }
 
     @GetMapping("/country/{countryISO2}")
     fun getSwiftCodesByCountry(@PathVariable countryISO2: String): Map<String, Any>? {
