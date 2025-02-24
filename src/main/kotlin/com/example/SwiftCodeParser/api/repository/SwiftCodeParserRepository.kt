@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface SwiftCodeParserRepository: JpaRepository<SwiftCode, String> {
     fun findBySwiftCode(swiftCode: String): List<SwiftCode>
+
+    fun findByCountryISO2(countryISO2: String): List<SwiftCode>
 }
