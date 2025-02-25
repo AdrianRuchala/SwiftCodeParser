@@ -1,8 +1,11 @@
 package com.example.SwiftCodeParser.api.controller
 
+import com.example.SwiftCodeParser.api.model.SwiftCode
 import com.example.SwiftCodeParser.api.repository.SwiftCodeParserRepository
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -15,7 +18,7 @@ class SwiftCodeParserController(val repository: SwiftCodeParserRepository) {
         val swiftCodes = repository.findBySwiftCode(swiftCode)
 
         if (swiftCodes.isEmpty()) {
-            return null
+            return mapOf("message" to "SWIFT Code doesn't exist")
         } else {
 
             val foundedSwiftCode = swiftCodes.first()
@@ -59,7 +62,7 @@ class SwiftCodeParserController(val repository: SwiftCodeParserRepository) {
         val swiftCodes = repository.findByCountryISO2(countryISO2)
 
         if (swiftCodes.isEmpty()) {
-            return null
+            return mapOf("message" to "SWIFT Codes list is empty")
         } else {
             return mapOf(
                 "countryISO2" to swiftCodes.first().countryISO2,
@@ -74,6 +77,16 @@ class SwiftCodeParserController(val repository: SwiftCodeParserRepository) {
                     )
                 }
             )
+        }
+    }
+
+    @PostMapping
+    fun addSwiftCode(@RequestBody swiftCode: SwiftCode): Map<String, String> {
+        if (repository.existsById(swiftCode.swiftCode)) {
+            return mapOf("message" to "SWIFT Code already exists")
+        } else {
+            repository.save(swiftCode)
+            return mapOf("message" to "SWIFT Code added successfully")
         }
     }
 }
