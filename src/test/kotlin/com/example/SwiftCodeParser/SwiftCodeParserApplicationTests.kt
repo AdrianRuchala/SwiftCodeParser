@@ -26,9 +26,9 @@ class SwiftCodeParserApplicationTests {
 
     @Test
     fun shouldReturnErrorMessageWhenSWIFTCodeIsNotFound() {
-        `when`(repository.findBySwiftCode("ABC123")).thenReturn(emptyList())
+        `when`(repository.findBySwiftCode("SOMESWIFTCODE123")).thenReturn(emptyList())
 
-        mockMvc.perform(get("/v1/swift-codes/ABC123"))
+        mockMvc.perform(get("/v1/swift-codes/SOMESWIFTCODE123"))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.message").value("SWIFT Code doesn't exist"))
     }
