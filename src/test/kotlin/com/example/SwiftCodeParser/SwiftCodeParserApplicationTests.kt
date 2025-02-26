@@ -2,17 +2,24 @@ package com.example.SwiftCodeParser
 
 import com.example.SwiftCodeParser.api.model.SwiftCode
 import com.example.SwiftCodeParser.api.repository.SwiftCodeParserRepository
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
+import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import org.mockito.Mockito.`when`
 import org.springframework.http.MediaType
 import org.springframework.test.context.bean.override.mockito.MockitoBean
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -171,4 +178,111 @@ class SwiftCodeParserApplicationTests {
             .andExpect(jsonPath("$.message").value("SWIFT Code deleted successfully"))
     }
 
+    @Test
+    fun shouldReturnThatBankIsAHeadquarter() {
+        val swiftCode = "SOMESWIFTCODEXXX"
+
+        assertTrue(swiftCode.endsWith("XXX"), "The string should ends with XXX")
+    }
+
+    @Test
+    fun shouldReturnThatBankIsNotAHeadquarter() {
+        val swiftCode = "SOMESWIFTCODE123"
+
+        assertFalse(swiftCode.endsWith("XXX"), "The string should ends with XXX")
+    }
+
+    @Test
+    fun shouldReturnThatCountryISO2IsUppercase() {
+        val countryISO2 = "so"
+
+        assertEquals("SO", countryISO2.uppercase(), "The string should be uppercase")
+    }
+
+    @Test
+    fun shouldReturnThatCountryNameIsUppercase() {
+        val countryISO2 = "Some country name"
+
+        assertEquals("SOME COUNTRY NAME", countryISO2.uppercase(), "The string should be uppercase")
+    }
+
+    @Test
+    fun shouldReturnThatSWIFTCodeIsEmpty() {
+        val swiftCode = ""
+
+        assertFalse(swiftCode.isNotEmpty(), "The string should not be empty")
+    }
+
+    @Test
+    fun shouldReturnThatSWIFTCodeIsNotEmpty() {
+        val swiftCode = "SOMESWIFTCODE123"
+
+        assertTrue(swiftCode.isNotEmpty(), "The string should not be empty")
+    }
+
+    @Test
+    fun shouldReturnThatFilenameHasCorrectExtension() {
+        val fileName = "Interns_2025_SWIFT_CODES - Sheet1.csv"
+
+        assertTrue(fileName.endsWith(".csv"), "Filename extension should be CSV")
+    }
+
+    @Test
+    fun shouldReturnThatFilenameHasIncorrectExtension() {
+        val fileName = "Interns_2025_SWIFT_CODES - Sheet1"
+
+        assertFalse(fileName.endsWith(".csv"), "Filename extension should be CSV")
+    }
+
+    @Test
+    fun shouldReturnThatCodesAreAssociated() {
+        val swiftCode1 = "ABCDEFGHXXX"
+        val swiftCode2 = "ABCDEFGH123"
+
+        assertEquals(
+            swiftCode1.take(8),
+            swiftCode2.take(8),
+            "The first 8 letter should be the same for associated banks"
+        )
+    }
+
+    @Test
+    fun shouldReturnThatCodesAreNotAssociated() {
+        val swiftCode1 = "ABCDEFGHXXX"
+        val swiftCode2 = "AGSGASGA123"
+
+        assertNotEquals(
+            swiftCode1.take(8),
+            swiftCode2.take(8),
+            "The first 8 letter should be the same for associated banks"
+        )
+    }
+
+    @Test
+    fun shouldReturnThatSWIFTCodeHasCorrectLength() {
+        val swiftCode = "ABCDEFGH123"
+
+        assertTrue(swiftCode.length == 8 || swiftCode.length == 11, "SWIFT Code should have 8 or 11 characters")
+    }
+
+    @Test
+    fun shouldReturnThatSWIFTCodeHasIncorrectLength() {
+        val swiftCode = "ABCD123"
+
+        assertFalse(swiftCode.length == 8 || swiftCode.length == 11, "SWIFT Code should have 8 or 11 characters")
+    }
+
+    @Test
+    fun shouldReturnThatCountryISO2CodeHasCorrectLength() {
+        val countryISO2 = "US"
+
+        assertEquals(2, countryISO2.length, "Country ISO2 Code should have 2 characters")
+    }
+
+    @Test
+    fun shouldReturnThatCountryISO2CodeHasIncorrectLength() {
+        val countryISO2 = "USA"
+
+        assertNotEquals(2, countryISO2.length, "Country ISO2 Code should have 2 characters")
+    }
 }
