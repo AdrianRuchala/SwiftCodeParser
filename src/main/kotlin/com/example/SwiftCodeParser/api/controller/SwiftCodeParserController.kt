@@ -26,7 +26,7 @@ class SwiftCodeParserController(val repository: SwiftCodeParserRepository) {
 
             return if (foundedSwiftCode.isHeadquarter) {
                 val branches = repository.findByCountryISO2(foundedSwiftCode.countryISO2)
-                    .filter { it.bankName == foundedSwiftCode.bankName && !it.isHeadquarter }
+                    .filter { it.swiftCode.take(8) == foundedSwiftCode.swiftCode.take(8) && !it.isHeadquarter && !it.isHeadquarter }
 
                 mapOf(
                     "address" to foundedSwiftCode.address,
@@ -88,17 +88,29 @@ class SwiftCodeParserController(val repository: SwiftCodeParserRepository) {
             countryName = swiftCode.countryName.uppercase()
         )
 
-        if (repository.existsById(swiftCode.swiftCode)) {
-            return mapOf("message" to "SWIFT Code already exists")
+        if (swiftCode.swiftCode.length == 8 || swiftCode.swiftCode.length == 11) {
+            if (swiftCode.swiftCode.all { it.isLetterOrDigit() }){
+                if (swiftCode.countryISO2.length == 2) {
+                    if (repository.existsById(swiftCode.swiftCode)) {
+                        return mapOf("message" to "SWIFT Code already exists")
+                    } else {
+                        repository.save(formattedSwiftCode)
+                        return mapOf("message" to "SWIFT Code added successfully")
+                    }
+                } else {
+                    return mapOf("message" to "Country ISO2 Code must have 2 characters")
+                }
+            } else {
+                return mapOf("message" to "SWIFT Code must contain only letters and numbers")
+            }
         } else {
-            repository.save(formattedSwiftCode)
-            return mapOf("message" to "SWIFT Code added successfully")
+            return mapOf("message" to "SWIFT Code must have 8 or 11 characters")
         }
     }
 
     @DeleteMapping("/{swiftCode}")
     fun deleteSwiftCode(@PathVariable swiftCode: String): Map<String, String> {
-        if(repository.existsById(swiftCode)) {
+        if (repository.existsById(swiftCode)) {
             repository.deleteById(swiftCode)
             return mapOf("message" to "SWIFT Code deleted successfully")
         } else {

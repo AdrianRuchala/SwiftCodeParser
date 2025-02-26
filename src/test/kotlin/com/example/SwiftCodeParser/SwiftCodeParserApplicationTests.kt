@@ -113,7 +113,7 @@ class SwiftCodeParserApplicationTests {
 
     @Test
     fun shouldReturnErrorMessageWhenSwiftCodeAlreadyExists() {
-        given(repository.existsById("SWIFTCODE123")).willReturn(true)
+        given(repository.existsById("SWIFTCODE12")).willReturn(true)
 
         val requestBody = """
             {
@@ -122,7 +122,7 @@ class SwiftCodeParserApplicationTests {
                 "countryISO2": "SO",
                 "countryName": "Some country name",
                 "isHeadquarter": false,
-                "swiftCode": "SWIFTCODE123"
+                "swiftCode": "SWIFTCODE12"
             }
         """.trimIndent()
 
@@ -137,7 +137,7 @@ class SwiftCodeParserApplicationTests {
 
     @Test
     fun shouldAddANewSWIFTCode() {
-        given(repository.existsById("SOMESWIFTCODE123")).willReturn(false)
+        given(repository.existsById("SOMESWIFTCODE12")).willReturn(false)
 
         val requestBody = """
             {
@@ -146,7 +146,7 @@ class SwiftCodeParserApplicationTests {
                 "countryISO2": "SO",
                 "countryName": "Some country name",
                 "isHeadquarter": false,
-                "swiftCode": "SWIFTCODE123"
+                "swiftCode": "SWIFTCODE12"
             }
         """.trimIndent()
 
@@ -284,5 +284,19 @@ class SwiftCodeParserApplicationTests {
         val countryISO2 = "USA"
 
         assertNotEquals(2, countryISO2.length, "Country ISO2 Code should have 2 characters")
+    }
+
+    @Test
+    fun shouldReturnThatSWIFTCodeHasContainLetterAndNumbers() {
+        val swiftCode = "ABCDEFGH123"
+
+        assertTrue(swiftCode.all { it.isLetterOrDigit() }, "SWIFT Code should contain only letters and numbers")
+    }
+
+    @Test
+    fun shouldReturnThatSWIFTCodeHasNotContainLetterAndNumbers() {
+        val swiftCode = "ABCDEF-?123"
+
+        assertFalse(swiftCode.all { it.isLetterOrDigit() }, "SWIFT Code should contain only letters and numbers")
     }
 }
