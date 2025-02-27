@@ -13,5 +13,15 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  app:
+    build: .
+    restart: no
+    environment:
+      DB_URL: jdbc:postgresql://host.docker.internal:5432/swift_code_parser_db
+      DB_USER: admin
+      DB_PASSWORD: admin
+    ports:
+      - "8080:8080"
+
 volumes:
   postgres_data:

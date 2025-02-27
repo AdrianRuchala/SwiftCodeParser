@@ -48,3 +48,8 @@ allOpen {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+	launchScript()
+}
+

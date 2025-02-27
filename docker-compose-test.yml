@@ -1,0 +1,21 @@
+services:
+  db-test:
+    image: postgres:latest
+    container_name: postgresql-test-container
+    restart: always
+    environment:
+      POSTGRES_DB: swift_code_parser_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+
+  app-test:
+    image: gradle:8.12.1-jdk17
+    restart: no
+    command: ./gradlew test
+    working_dir: /app
+    environment:
+      DB_URL: jdbc:postgresql://db-test:5432/swift_code_parser_db
+      DB_USER: admin
+      DB_PASSWORD: admin
+    volumes:
+      - .:/app
