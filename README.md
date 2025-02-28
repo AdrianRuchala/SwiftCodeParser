@@ -193,7 +193,7 @@ Response if SWIFT code is deleted successfully:
 }
 ```
 
-Response if SWIFT code already exists:
+Response if SWIFT code doesn't exists:
 
 ```bash
 {
