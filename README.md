@@ -185,7 +185,7 @@ Example request:
 curl -X DELETE "http://localhost:8080/v1/swift-codes/TESTAAAAXXX"
 ```
 
-Response if SWIFT code doesn't exist:
+Response if SWIFT code is deleted successfully:
 
 ```bash
 {
