@@ -1,6 +1,6 @@
 # SwiftCodeParser
 
-Parse Swift App is a Kotlin Spring Boot application that parses SWIFT codes from a CSV file, stores
+Swift Code Parser is a Kotlin Spring Boot application that parses SWIFT codes from a CSV file, stores
 them in a PostgreSQL database, and exposes a REST API to retrieve SWIFT code information, add a new
 SWIFT code or delete existing SWIFT code. The application runs on http://localhost:8080.
 
