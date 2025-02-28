@@ -59,7 +59,7 @@ Retrieve SWIFT code information by SWIFT code.
 Example request for headquarter SWIFT code:
 
 ```bash
-curl -X GET http://localhost:8080/v1/swift-codes/AIPOPLP1XXX
+curl -X GET http://localhost:8080/v1/swift-codes/ALBPPLPWXXX
 ```
 
 Response:
@@ -87,7 +87,7 @@ Response:
 Example request for branch SWIFT code:
 
 ```bash
-curl -X GET http://localhost:8080/v1/swift-codes/AIPOPLP1XXX
+curl -X GET http://localhost:8080/v1/swift-codes/ALBPPLPWCUS
 ```
 
 Response:
